@@ -9,10 +9,13 @@ const UseEffectBasics = () => {
   const [value, setValue] = useState(0)
 
   useEffect(() => {
-    console.log("Call useEffect");
+    console.log("Call useEffect", value == 1);
     console.log(value);
-    if(value == 1)
+    if(value == 1){
+      console.log("New message triggered.");
       document.title = `New Message (${value})`
+    }
+
   }, [value])  // Use effect can take an array as 2nd parameter. The array determines which values will trigger the useEffect Hook. An empty array
           // means it will trigger only on initial render/page-load. Not providing the 2nd parameter will cause it to trigger if ANYTHING changes.
   console.log("render component");
