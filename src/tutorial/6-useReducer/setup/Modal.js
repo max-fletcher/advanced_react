@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 
-const Modal = () => {
-  return <div>i'm modal</div>;
+const Modal = (props) => {
+  return <div className='modal'>
+    <p>
+      {props.modalContent}
+    </p>
+  </div>;
 };
 
 export default Modal;
