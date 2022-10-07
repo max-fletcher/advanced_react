@@ -53,7 +53,7 @@ const ControlledInputs = () => {
 
    return (
       <>
-         <h1>controlled inputs</h1>
+         <h1>multiple inputs</h1>
          <article>
             {/* Don't use "onSubmit={handleSubmit()}". Instead use  onSubmit={handleSubmit}. For some reason, it throws error for the event listener if
                   not done so. You can also use onClick on the submit button as per shown below instead of the onSumbit inside the form tag to submit the

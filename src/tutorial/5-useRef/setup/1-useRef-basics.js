@@ -8,11 +8,15 @@ import React, { useEffect, useRef } from 'react';
 const UseRefBasics = () => {
 
   const refContainer = useRef(null)
+  const divContainer = useRef(null)
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Some Message');
     console.log(refContainer.current.value);
+
+    // this will spit out the entire div with ref "divContainer" in console.
+    console.log(divContainer.current);
   }
 
   useEffect(() => {
@@ -30,6 +34,7 @@ const UseRefBasics = () => {
           <button type="submit"> Submit </button>
         </div>
       </form>
+      <div style={{display: "none"}} ref={divContainer}>Some Random Div</div>
     </>
   );
 };
