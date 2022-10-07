@@ -1,54 +1,9 @@
 import React, { useState, useReducer } from 'react'
 import Modal from './Modal'
 import { data } from '../../../data'
+import { reducer } from './reducer'
 
-// reducer function
-const reducer = (state, actions) => {
-  console.log(state);
-  if(actions.type === "ADD_PERSON"){
-      const newPeople = [...state.people, actions.payload] // using spread operator to add person to the end of people array
-
-      // the object returned here is the new state. We are again using object destructuring to edit data before returning it. It is changing
-      // everything inside the initial state object.
-      return {
-        ...state,
-        people: newPeople,
-        isModalOpen: true,
-        modalContent: 'Person Added !'
-      }
-  }
-  else if(actions.type === "NO_VALUE"){
-      // the object returned here is the new state. We are again using object destructuring to edit data before returning it. It is changing
-      // everything except people.
-      return {
-        ...state,
-        isModalOpen: true,
-        modalContent: 'Please Enter Value Before Submitting !'
-      }
-  }
-  else if(actions.type === "CLOSE_MODAL"){
-      return {
-        ...state,
-        isModalOpen: false
-      }
-  }
-  else if(actions.type === "REMOVE_PERSON"){
-    const newPeople = state.people.filter(
-      (person) => {
-        return person.id !== actions.payload
-      }
-    )
-    return {
-      ...state,
-      people: newPeople,
-      isModalOpen: true,
-      modalContent: 'Person Removed !'
-    }
-}
-  // better to throw an error to spot bugs. Returning a valid state by default is not good practice since it will fool you into thinking everything is OK.
-  throw new Error('No matching action type')
-  // return state  // returning this is not good practice as mentioned above
-}
+// MOVED REDUCER FUNCTION TO A SEPARATE FILE CALLED reducer.js. IT GOES HERE IF NOT IMPORTED.
 
 // default values for reducer
 const defaultState = {
@@ -60,7 +15,7 @@ const defaultState = {
 const Index = () => {
   const [name, setName] = useState("")
   // 'state' is the name of the reducer. The values inside the reducer can be accessed using say 'state.user'(dot syntax). Dispatch contains the access
-  // to the functions that ae inside the actions. The useRecuder takes 2 args. 1st is the reducer function that contains all the actions and the 2nd
+  // to the functions that are inside the actions. The useRecuder takes 2 args. 1st is the reducer function that contains all the actions and the 2nd
   // contains the initial state of the variables/states inside the reducer.
   const [state, dispatch] = useReducer(reducer, defaultState)
 
@@ -91,7 +46,9 @@ const Index = () => {
   return(
     <>
       <h2>useReducer</h2>
-      {/* passing state.modalContent into the modal so that  */}
+      {/* passing state.modalContent into the modal so that it can be displayed as the message. */}
+      {/* Also passing the close_modal function so it can be triggered/called internally from the component as opposed to doing it externally
+      (which is needlessly difficult) */}
       {state.isModalOpen && <Modal closeModal={close_modal} modalContent={state.modalContent} />}
       <form className="form" onSubmit={handleSubmit}>
         <div>

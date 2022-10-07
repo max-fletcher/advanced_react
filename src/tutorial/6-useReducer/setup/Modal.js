@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 
 const Modal = (props) => {
+
   useEffect(()=>{
     setTimeout(()=>{
-      props.close_modal()
+      props.closeModal()
     }, 3000)
   })
 
