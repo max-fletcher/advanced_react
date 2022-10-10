@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+// the 'use' keyword has to be the prefix for custom hooks. Otherwise, the compiler throws an error. THis is because useState and useEffect can only be used inside
+// either a component or a custom hook(denoted by 'useName' where 'Name' can be any name).
 import { useFetch } from './2-useFetch'
 
 // ATTENTION!!!!!!!!!!
@@ -6,20 +8,13 @@ import { useFetch } from './2-useFetch'
 const url = 'https://course-api.com/javascript-store-products'
 
 const Example = () => {
-  const [loading, setLoading] = useState(true)
-  const [products, setProducts] = useState([])
+  // the 'use' keyword has to be the prefix for custom hooks. Otherwise, the compiler throws an error. THis is because useState and useEffect can only be used inside
+  // either a component or a custom hook(denoted by 'useName' where 'Name' can be any name).
+  const {loading, products} = useFetch(url)
 
-  const getProducts = async () => {
-    const response = await fetch(url)
-    const products = await response.json()
-    setProducts(products)
-    setLoading(false)
-  }
+  // log products. we are not doing anything with the data inside JSX since this is just for demonstration purposes. You can use the returned data as you se fit.
+  console.log(products) 
 
-  useEffect(() => {
-    getProducts()
-  }, [url])
-  console.log(products)
   return (
     <div>
       <h2>{loading ? 'loading...' : 'data'}</h2>
