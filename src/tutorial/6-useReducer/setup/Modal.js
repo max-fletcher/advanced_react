@@ -6,6 +6,10 @@ const Modal = (props) => {
     setTimeout(()=>{
       props.closeModal()
     }, 3000)
+    return () => { // for some reason, the cleanup here was not included in John's tutorial. Need to know why he didn't do it.
+      console.log('cleanup');
+      clearTimeout();
+    };
   })
 
   return <div className='modal'>
