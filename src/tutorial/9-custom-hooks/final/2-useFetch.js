@@ -13,6 +13,6 @@ export const useFetch = (url) => {
 
   useEffect(() => {
     getProducts();
-  }, [url, getProducts]);
+  }, [url, getProducts]); // basically this means that when the url changes, it will cause the useEffect to trigger.
   return { loading, products };
 };
