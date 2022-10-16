@@ -5,6 +5,22 @@ import { useFetch } from '../../9-custom-hooks/final/2-useFetch'
 // I SWITCHED TO PERMANENT DOMAIN
 const url = 'https://course-api.com/javascript-store-products'
 
+// Imagine this is a very expensive operation with a few hundred/thousand lines of code.
+const calculateMostExpensive = (data) => { // this is returning the highest item price
+  // To keep track of when this function is triggered. We can invoke this inside h1 tags below(works like a computed property but worse).
+  // Without useMemo, it will be triggered every time anything changes(which then works like a proper computed property).
+  console.log('calculateMostExpensive triggered');
+  return(
+    data.reduce((total, item) => {
+      const price = item.fields.price
+      if(price >= total){
+        total = price
+      }
+      return total
+    }, 0)/100  // round off the value calculated by 'reduce' callback to the nearest 100th
+  )
+}
+
 // every time props or state changes, component re-renders
 
 // The useCallback and useMemo Hooks are similar. The main difference is that useMemo returns a memoized value and useCallback returns a memoized
@@ -15,14 +31,21 @@ const Index = () => {
   const [count, setCount] = useState(0)
   const [cart, setCart] = useState(0)
 
+  // useMemo causes the calculateMostExpensive function to only be invoked when 'products'[i.e value/values inside dependency array] changes. So its
+  // better to invoke this instead of calculateMostExpensive() inside the h1 below so that the component doesn't re-render every time count is changed.
+  // This works like a computed property in Vue.
+  const mostExpensive = useMemo(() => {
+    calculateMostExpensive(products);
+  }, [products])
+
   // Using useCallback here(with a dependency array containing 'cart' just like useEffect) to make sure that when count is changed, it doesn't
-  // trigger re-render. The way it works is that when we refresh or change count, this function('addToCart') is built from scratch so when it was
+  // trigger re-render. The way it works is that when we refresh or change cart count, this function('addToCart') is built from scratch so when it was
   // passed down using prop-drilling, the components that receive it will have their props changed(re-render happens when state or props change),
-  // so react is tricked into re-rendering the entire component tree. By adding the useCallback with 'cart' as the dependency, we are telling react to
-  // create the 'addToCart' function ONLY when the cart value is changed. The reason we are not passing an empty dependency array is because if we do,
-  // the cart value will be stuck at 0. This is because it will cause this function('addToCart') to only be created on initial render. It will, after
-  // that, NEVER be created again and not be found.
-  const addToCart = useCallback(() => {
+  // so react is tricked into re-rendering the entire component tree(BigList and below ).By adding the useCallback with 'cart' as the dependency, we are
+  // telling react to create the 'addToCart' function ONLY when the cart value is changed. The reason we are not passing an empty dependency array
+  // is because if we do, the cart value will be stuck at 0. This is because it will cause this function('addToCart') to only be created on initial render.
+  // It will, after that, NEVER be created again and not be found.
+  const addToCart = useCallback(() => { // imagine that this adds new items to the cart
     console.log(cart);
     setCart(cart + 1)
   }, [cart])
@@ -33,6 +56,7 @@ const Index = () => {
       <button className='btn' onClick={() => setCount(count + 1)}>
         click me
       </button>
+      <h1>Most Expensive: ${mostExpensive}</h1>
       {/* This is just for demonstration purposes. cart is a counter nothing else */}
       <h1 style={{marginTop: '3rem'}}>Cart: {cart}</h1>
       {/* Prop-drilling addToCart into BigList component */}
